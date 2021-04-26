@@ -2,6 +2,11 @@
 
 Exemplos na linguagem haskell
 
+# configurar o ambiente
+
+Instale o ghcid para evaluete
+stack install ghcid
+
 
 # Criando um novo projeto
 
