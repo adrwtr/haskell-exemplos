@@ -1,4 +1,4 @@
-module Main where
+module TiposDeDados where
 
 -- funcao necessaria para imprimir numeros
 printInt :: (Int) -> String
