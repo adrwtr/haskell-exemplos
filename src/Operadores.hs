@@ -8,8 +8,12 @@ main = do
   print (5 / 2)
   print (5 `mod` 2)
   print (5 / (2 * 2))
+
   print (5 == 2)
+
+  -- diference
   print (5 /= 2)
+
   print (5 > 2)
   print (5 < 2)
   print (1 == 1 && 2 == 2)

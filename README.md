@@ -13,3 +13,7 @@ stack install ghcid
 stack new projeto-teste simples
 stack build
 stack run
+
+# entrar no ghci
+
+stack ghci
