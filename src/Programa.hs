@@ -6,6 +6,7 @@ import System.IO
 type Nota = (String, [Double])
 
 -- definicao de funcao que substitui o tipo
+-- nota :: Nota
 nota nome n1 n2 = (nome, [n1, n2])
 
 notaVazia = nota "" 0 0
@@ -47,6 +48,7 @@ lerNotas = do
             notas <- lerNotas
             return $ nota:notas
 
+
 -- este programa le as notas e imprime em uma tupla
 -- renomear para de "main_teste1" para "main" para executar
 main_teste1 = do
@@ -80,7 +82,7 @@ exibirMedias notas = do
 
 -- main_final = do
 main = do
-    notas <- lerNotas
+    let notas <- lerNotas
     exibirMedias notas
 
 -- main_final_reduzido

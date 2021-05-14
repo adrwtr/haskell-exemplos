@@ -1,6 +1,7 @@
 module ControleFluxo where
 
 import Control.Monad
+import System.IO
 
 
 -- if simples
@@ -18,6 +19,32 @@ testeCaso teste
     | otherwise    = "nao sei"
 
 arrNomes = ["Adriano", "Joao", "Pedro", "Simão"]
+
+tabuadaNumero :: (Ord a, Num a, Show a) => a -> String
+tabuadaNumero n1 = if (n1 > 10)
+    then "terminou"
+    else printNumero 1 n1
+
+printNumero :: (Num a, Show a) => a -> a -> String
+printNumero n1 n2 = do
+    let total = n1 * n2
+    (show n1) ++ " * " ++ (show n2) ++ " = " ++ (show total)
+
+-- tabuadaNumero :: (Eq a, Num a) => a -> IO (Int)
+-- tabuadaNumero n1 = do
+--     if n1 == 10
+--         then do
+--             let val = read 10 :: Int
+--             return val
+            -- print $ n1 * tabuadaNumero (n1 + 1)
+        -- else do print $ n1 * 10
+
+
+-- tabuada n1 n2
+--     if n1 < n2
+--         then do
+--             print $ tabuadaNumero n1
+--             tabuada (n1 + 1) n2
 
 main :: IO ()
 main = do
@@ -41,11 +68,17 @@ main = do
     -- list compreension
     print [(list) | list <- [1..30], list `mod` 3 /= 0]
 
-   -- let triangles = [ (a,b,c) | c <- [1..10], b <- [1..10], a <- [1..10] ]
+    -- // Escreva um programa que imprime a tabuada
+    -- // dos numeros de 3 a 5 de acordo com o padrao
+    -- tabuadaNumero 3
+    print $ tabuadaNumero 10
 
 
--- // Escreva um programa que imprime a tabuada
--- // dos numeros de 3 a 5 de acordo com o padrao
+
+
+
+
+
 -- for ($i = 3; $i <= 5; $i++) {
 --    echo "tabuada de " . $i;
 --    echo $ds_enter;

@@ -16,4 +16,7 @@ stack run
 
 # entrar no ghci
 
-stack ghci
+ghci
+
+
+#
