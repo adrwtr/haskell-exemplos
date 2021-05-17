@@ -28,33 +28,21 @@ printNumero :: (Ord a, Num a, Show a) => a -> a -> String
 printNumero n1 10 = (show n1) ++ " * " ++ (show 10) ++ " = " ++ show (n1) ++ "\n"
 printNumero n1 n2 = printNumero n1 (n2+1) ++ (show n1) ++ " * " ++ (show n2) ++ " = " ++ (show 10) ++ "\n"
 
--- tabuadaNumero :: (Eq a, Num a) => a -> IO (Int)
--- tabuadaNumero n1 = do
---     if n1 == 10
---         then do
---             let val = read 10 :: Int
---             return val
-            -- print $ n1 * tabuadaNumero (n1 + 1)
-        -- else do print $ n1 * 10
 
+printTabuada :: (Ord a, Num a, Show a) => a -> a -> String
+printTabuada n1 n2 = (show n1) ++ " * " ++ (show n2) ++ " = " ++ show (n1 * n2) ++ "\n"
 
--- tabuada n1 n2
---     if n1 < n2
---         then do
---             print $ tabuadaNumero n1
---             tabuada (n1 + 1) n2
-funcaoImprimir :: (Ord a, Num a, Show a) => a -> a -> String
-funcaoImprimir const1 var1 = (show const1) ++ " * " ++ (show var1) ++ " = " ++ show (const1 * var1) ++ "\n"
+printLinha1 :: (Num a, Show a) => a -> String
+printLinha1 n1 = "\nTabuada de: " ++ (show n1) ++ "\n"
 
+multiplica :: (Ord a, Num a, Show a) => a -> a -> String
+multiplica const1 1 = printLinha1 const1 ++ printTabuada const1 1 ++ (multiplica const1 (2))
+multiplica const1 10 = printTabuada const1 10
+multiplica const1 var1 = printTabuada const1 var1 ++ multiplica const1 (var1 + 1)
 
-funcaoInterna :: (Ord a, Num a, Show a) => a -> a -> String
-funcaoInterna const1 1 = "\nTabuada de: " ++ (show const1) ++ "\n" ++ funcaoImprimir const1 1 ++ (funcaoInterna const1 (2))
-funcaoInterna const1 10 = funcaoImprimir const1 10
-funcaoInterna const1 var1 = funcaoImprimir const1 var1 ++ funcaoInterna const1 (var1 + 1)
-
-funcaoExterna :: (Ord a, Num a, Show a) => a -> String
-funcaoExterna 5 = funcaoInterna 5 1
-funcaoExterna n = funcaoInterna n 1 ++ funcaoExterna (n+1)
+tabuada :: (Ord a, Num a, Show a) => a -> String
+tabuada 5 = multiplica 5 1
+tabuada n = multiplica n 1 ++ tabuada (n+1)
 
 main :: IO ()
 main = do
@@ -80,25 +68,9 @@ main = do
 
     -- // Escreva um programa que imprime a tabuada
     -- // dos numeros de 3 a 5 de acordo com o padrao
-    -- tabuadaNumero 3
-    -- putStr $ tabuadaNumero 1
-    putStr $ funcaoExterna 3
+    putStr $ tabuada 3
 
 
-
-
-
-
-
--- for ($i = 3; $i <= 5; $i++) {
---    echo "tabuada de " . $i;
---    echo $ds_enter;
-
---    for ($a = 0; $a <= 10; $a++) {
---       echo $i . " * " . $a . " = " . $i * $a;
---       echo $ds_enter;
---    }
--- }
 
 
 -- // Escreva um programa que desenhe uma
