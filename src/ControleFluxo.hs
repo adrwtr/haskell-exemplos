@@ -3,7 +3,6 @@ module ControleFluxo where
 import Control.Monad
 import System.IO
 
-
 -- if simples
 testeIf :: (Ord a) => a -> a -> String
 testeIf a b = if a < b
@@ -20,29 +19,44 @@ testeCaso teste
 
 arrNomes = ["Adriano", "Joao", "Pedro", "Simão"]
 
-tabuadaNumero :: (Ord a, Num a, Show a) => a -> String
-tabuadaNumero 10 = "0"
-tabuadaNumero n = tabuadaNumero (n+1) ++ printNumero 1 (n+1)
-
-printNumero :: (Ord a, Num a, Show a) => a -> a -> String
-printNumero n1 10 = (show n1) ++ " * " ++ (show 10) ++ " = " ++ show (n1) ++ "\n"
-printNumero n1 n2 = printNumero n1 (n2+1) ++ (show n1) ++ " * " ++ (show n2) ++ " = " ++ (show 10) ++ "\n"
-
-
+-- imprime uma string formatada da tabuada entre 2 numeros
 printTabuada :: (Ord a, Num a, Show a) => a -> a -> String
 printTabuada n1 n2 = (show n1) ++ " * " ++ (show n2) ++ " = " ++ show (n1 * n2) ++ "\n"
 
+-- primime a primeira linha da tabuada
 printLinha1 :: (Num a, Show a) => a -> String
 printLinha1 n1 = "\nTabuada de: " ++ (show n1) ++ "\n"
 
+-- realiza a tabuada de um numero até 10
 multiplica :: (Ord a, Num a, Show a) => a -> a -> String
 multiplica const1 1 = printLinha1 const1 ++ printTabuada const1 1 ++ (multiplica const1 (2))
 multiplica const1 10 = printTabuada const1 10
 multiplica const1 var1 = printTabuada const1 var1 ++ multiplica const1 (var1 + 1)
 
+-- imprime a tabuada de um numero ateh 5
 tabuada :: (Ord a, Num a, Show a) => a -> String
 tabuada 5 = multiplica 5 1
 tabuada n = multiplica n 1 ++ tabuada (n+1)
+
+
+
+-- algoritmo de resolucao do problem da arvore de natal
+espacoAntes :: (Ord a, Num a, Show a) => a -> a -> String
+espacoAntes n total
+    | n < total = " " ++ espacoAntes (n+1) total
+    | otherwise = ""
+
+-- algoritmo de resolucao do problem da arvore de natal
+estrela :: (Ord a, Num a, Show a) => a -> a -> String
+estrela n total
+    | n < total = "*" ++ estrela (n+1) total
+    | otherwise = ""
+
+-- algoritmo de resolucao do problem da arvore de natal
+loopArvore :: (Ord a, Num a, Show a) => a -> String
+loopArvore 4 = estrela 0 4 ++ "\n"
+loopArvore n = espacoAntes 0 (4 - n) ++ estrela 0 n ++ "\n" ++ loopArvore (n+1)
+
 
 main :: IO ()
 main = do
@@ -70,40 +84,8 @@ main = do
     -- // dos numeros de 3 a 5 de acordo com o padrao
     putStr $ tabuada 3
 
-
-
-
--- // Escreva um programa que desenhe uma
--- // piraide de asteriscos (*). A saida do seu programa
--- // deve seguir o padrao abaixo:
--- //   *
--- //  ***
--- // *****
--- //*******
-
--- $nr_tamanho = 4;
--- $nr_espacos = $nr_tamanho;
--- $nr_estrelas = 0;
-
--- while ($nr_tamanho > 0) {
---    $nr_espacos = $nr_espacos - 1;
---    $nr_estrelas = $nr_estrelas + 1;
-
---    for ($i = 0; $i < $nr_espacos; $i++) {
---       echo " ";
---    }
-
---    for ($i = 0; $i < $nr_estrelas; $i++) {
---       echo "*";
---    }
-
---    if ($nr_estrelas > 1) {
---       for ($i = 1; $i < $nr_estrelas; $i++) {
---          echo "*";
---       }
---    }
-
---    echo "\n";
-
---    $nr_tamanho = $nr_tamanho - 1;
--- }
+    -- putStr $ espacoAntes 2 10
+    -- putStr $ estrela 1 2
+    -- putStr $ estrela 1 3
+    -- putStr $ estrela 1 4
+    putStr $ loopArvore 1
