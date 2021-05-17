@@ -17,6 +17,7 @@ stack run
 # entrar no ghci
 
 ghci
+C:\tools\ghc-9.0.1\bin\ghci
 
 
 #
