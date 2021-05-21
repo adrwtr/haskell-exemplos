@@ -11,6 +11,10 @@ soma = (+)
 incrementa :: Int -> Int
 incrementa = (+1)
 
+-- exemplo para composicao de funcao
+aplicaQuatroX :: (a -> a) -> a -> a
+aplicaQuatroX f a = (f . f . f . f) a
+
 main :: IO ()
 main = do
     print $ (+) 2 3
@@ -35,3 +39,13 @@ main = do
 
     -- pega tudo depois do predicado
     print $ dropWhile (/= ' ') "alo mundo - estamos aqui"
+
+    -- lambdas
+    print $ map (\(x,y) -> x + y) [(1, 2), (3,4), (5,6)]
+
+    print $ filter (\xs -> length xs > 3) ["adriano", "haslkel", "ma", "Lu", "co"]
+
+    print $ foldr (\x y -> x + y) 0 [1, 2, 3]
+
+    -- composicao de funcao
+    print $ aplicaQuatroX (\x -> x+1) 1
