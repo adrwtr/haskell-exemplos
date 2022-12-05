@@ -62,6 +62,12 @@ nextInt n = add 1 n
 ou
 nextInt :: Int -> Int
 nextInt = add 1
+
+__Algebraic Data Type__ - usando os tipos produto e soma
+    - __product type__ - combinação de tipos (record)
+    - __sum type__ - escolha entre tipos (altenativas)
+Com esses dois tipos temos um dominio especificado corretamente
+evitando representações ilegais
 -}
 
 {-
@@ -356,3 +362,74 @@ take 4 [0 ..]
 take 5 (repeat 0)
 [0,0,0,0,0]
 -}
+
+
+isThird42 :: (Eq a, Num a) => [a] -> Bool
+isThird42 [] = False
+isThird42 ( _ : _ : x : xs ) = if x == 42 then True else False
+
+{-
+Data types
+
+Product - simples data type
+-}
+
+
+data Knight = MkKnight
+    { health  :: Int
+    , attack :: Int
+    , gold :: Int
+    } deriving (Show)
+
+
+data Monster = MkMonster
+    { mHealth  :: Int
+    , mAttack :: Int
+    , mGold :: Int
+    } deriving (Show)
+
+fighter1 :: Knight
+fighter1 = MkKnight
+    { health = 100
+    , attack = 10
+    , gold = 0
+    }
+
+dragon1 :: Monster
+dragon1 = MkMonster
+    { mHealth = 10
+    , mAttack = 10
+    , mGold = 10
+    }
+
+fight :: Monster -> Knight -> Int
+fight monster knight
+    | mHealth monster <= 0 = gold knight + mGold monster
+    | health knight <= 0 = -1
+    | otherwise = fight (MkMonster (mHealth monster - attack knight) (mAttack monster) (mGold monster)) (MkKnight (health knight - mAttack monster) (attack knight) (gold knight))
+
+
+{-
+SUM TYPES
+
+Sum types can be seen as "one-of" data structures.
+-}
+data MagicType
+    = DarkMagic
+    | LightMagic
+    | NeutralMagic
+
+data Loot
+    = Sword Int  -- attack
+    | Shield Int  -- defence
+
+woodenSword :: Loot
+woodenSword = Sword 2
+
+adamantiumShield :: Loot
+adamantiumShield = Shield 3000
+
+acceptLoot :: Loot -> String
+acceptLoot loot = case loot of
+    Sword _ -> "Thanks! That's a great sword!"
+    Shield _ -> "I'll accept this shield as a reward!"
