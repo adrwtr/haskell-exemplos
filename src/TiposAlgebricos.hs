@@ -145,6 +145,19 @@ minhaPessoa2 = TEmpresa (MkEmpresa "Empresa" "1231231")
 minhaPessoa3 :: PessoaOuEmpresa
 minhaPessoa3 = TPessoa adriano
 
+
+newtype Peso = MkPeso
+    { propPeso :: Int
+    }
+
+newtype Altura = MkAltura
+    { propAltura :: Int
+    }
+
+getPesoAltura :: Peso -> Altura -> Int
+getPesoAltura (MkPeso x) (MkAltura y) = x * y
+
+
 main :: IO ()
 main = do
     putStrLn "hello world"
@@ -180,3 +193,5 @@ main = do
     print $ showTiposDePessoa minhaPessoa3
     print $ showTiposDePessoa minhaPessoa2
     print $ showTiposDePessoa minhaPessoa1
+
+    print $ getPesoAltura (MkPeso 2) (MkAltura 2)
