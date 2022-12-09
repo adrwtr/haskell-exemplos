@@ -433,3 +433,17 @@ acceptLoot :: Loot -> String
 acceptLoot loot = case loot of
     Sword _ -> "Thanks! That's a great sword!"
     Shield _ -> "I'll accept this shield as a reward!"
+
+
+{-
+parametric data type
+-}
+
+data TreasureChest x = TreasureChest
+    { treasureChestGold :: Int
+    , treasureChestLoot :: x
+    }
+
+showEither :: Either String Int -> String
+showEither (Left msg) = "Left with string: " ++ msg
+showEither (Right n) = "Right with number: " ++ show n
