@@ -80,11 +80,28 @@ No Haskell nos temos
     >> isEnoughDiamonds :: TreasureChest Int -> Int -- aqui o tipo de entrada foi definido
 
     __Maybe__ - um tipo polimorfico que representa um valor ou nada
+    Maybe é um type Constructor, por que não existe um valor Maybe
 
     __Either__ - vai para um caminho ou para outro
     >> showEither :: Either String Int -> String
     >> showEither (Left msg) = "Left with string: " ++ msg
     >> showEither (Right n) = "Right with number: " ++ show n
+
+    __Typeclass__ - expressa caracteristicas comuns em diferentes tipos de dados
+    e podemos usar ele para criar regras que serão usadas na criação de funções
+    ou seja, as funções deverão seguir as regras da Typeclass
+
+    É composto por:
+        __class__ - definição do typeclass
+        __instance__ - cria a definição para o tipo desejado
+        __constraints__ - usado na função para determinar as regras
+        __ad-hoc polymorphism__ - qndo uma função tem seu comportamento parametrizado
+        pelo tipo de dados
+
+    __kinds__ - O tipo que representa os tipos. Ele representa o formato de um tipo.
+    Kind *      = tipo primitivo (Int, Bool)
+    Kind * -> * = construtor de tipos (Maybe Either)
+    Kind * -> Constrait = para constraits em typecasses
 
 
 -}
@@ -479,3 +496,34 @@ data TreasureChest x = TreasureChest
 showEither :: Either String Int -> String
 showEither (Left msg) = "Left with string: " ++ msg
 showEither (Right n) = "Right with number: " ++ show n
+
+{--
+Typeclasses
+--}
+
+{-# LANGUAGE InstanceSigs #-}
+
+class Carro a where
+    getCarro :: a -> String
+
+instance Carro Bool where
+    getCarro :: Bool -> String
+    getCarro True = "True Car"
+    getCarro False = "False Car"
+
+instance Carro Int where
+    getCarro :: Int -> String
+    getCarro i = case i of
+        0 -> "Carro não anda"
+        _ -> printInt i ++ ".0 car"
+
+printInt :: (Int) -> String
+printInt a = show a
+
+revealCar :: (Carro a, Show a) => a -> String
+revealCar x = "As propriedades do carro sao: " ++ (getCarro x)
+
+-- main = do
+--    putStrLn "Hello, World!"
+--    putStrLn $ revealCar (2 :: Int)
+--    putStrLn $ revealCar (True :: Bool)
