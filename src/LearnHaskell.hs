@@ -19,7 +19,43 @@ No Haskell nos temos
     __parametric polymorphism__ -> trabalha com listas polimorficas
     - de qualquer tipo que será inferido
 
-    __lazy evaluation__ -> doesn't evaluate expressions when not needed
+    __lazy evaluation__ -> não vai avaliar ou reduzir uma operação
+    enquanto ela não for necessaria
+
+    __pattern matching__ - compara valores de um tipo e produz
+    resultados baseados em padrões
+
+        __hole__ - symbol "_" (underscore) is called __hole__,
+        and it is used when we don't care about the value of a variable
+
+        The canonical naming scheme for such patterns is `(x:xs)`
+        where x is the first element of the list, and xs — rest of the list
+
+    __higher-order functions__ - qndo uma função recebe outra como argumento
+    ✲ You can pass functions as arguments
+    ✲ You can return functions as results
+    ✲ You can compose functions easily to create new functions
+    ✲ You can have lists of functions
+
+
+    __lambdas__ (or anonymous functions) - funções sem nome
+    >>> map (\x -> x + 3) [0..5]
+    [3,4,5,6,7,8]
+
+    __apply functions partially__ - aplicar funções parcialmente
+
+    __eta-reduction__ - simplification of functions over their arguments
+    nextInt :: Int -> Int
+    nextInt n = add 1 n
+    ou
+    nextInt :: Int -> Int
+    nextInt = add 1
+
+    __Algebraic Data Type__ - usando os tipos produto e soma
+        - __product type__ - combinação de tipos (record)
+        - __sum type__ - escolha entre tipos (altenativas)
+    Com esses dois tipos temos um dominio especificado corretamente
+    evitando representações ilegais
 -}
 
 {-
@@ -34,43 +70,6 @@ foo :: [a] -> [b] -> [a]
 
 syntax sugar - facilidade de escrever ou abreviar
 
-__pattern matching__ - match on different values of a type
-and produce results based on patterns
-
-__hole__ - symbol "_" (underscore) is called __hole__,
-and it is used when we don't care about the value of a variable
-
-The canonical naming scheme for such patterns is `(x:xs)`
-where x is the first element of the list, and xs — rest of the list
-
-__higher-order functions__ - qndo uma função recebe outra como argumento
- ✲ You can pass functions as arguments
- ✲ You can return functions as results
- ✲ You can compose functions easily to create new functions
- ✲ You can have lists of functions
-
-
-__lambdas__ (or anonymous functions) - funções sem nome
->>> map (\x -> x + 3) [0..5]
-[3,4,5,6,7,8]
-
-__apply functions partially__ - aplicar funções parcialmente
-
-__eta-reduction__ - simplification of  functions over their arguments
-nextInt :: Int -> Int
-nextInt n = add 1 n
-ou
-nextInt :: Int -> Int
-nextInt = add 1
-
-__Algebraic Data Type__ - usando os tipos produto e soma
-    - __product type__ - combinação de tipos (record)
-    - __sum type__ - escolha entre tipos (altenativas)
-Com esses dois tipos temos um dominio especificado corretamente
-evitando representações ilegais
--}
-
-{-
 Para descobrir o tipo das coisas
 >>> :t False
 
@@ -367,6 +366,8 @@ take 5 (repeat 0)
 isThird42 :: (Eq a, Num a) => [a] -> Bool
 isThird42 [] = False
 isThird42 ( _ : _ : x : xs ) = if x == 42 then True else False
+
+
 
 {-
 Data types
