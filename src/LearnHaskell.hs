@@ -51,11 +51,42 @@ No Haskell nos temos
     nextInt :: Int -> Int
     nextInt = add 1
 
-    __Algebraic Data Type__ - usando os tipos produto e soma
+    __Algebraic Data Type__ - ADT - usando os tipos produto e soma
+
         - __product type__ - combinação de tipos (record)
+        data Knight = MkKnight  { health  :: Int, attack :: Int} deriving (Show)
+        data Monster = MkMonster  { mhealth  :: Int, mattack :: Int} deriving (Show)
+
         - __sum type__ - escolha entre tipos (altenativas)
-    Com esses dois tipos temos um dominio especificado corretamente
-    evitando representações ilegais
+        data PlayerType = Knigth | Monster deriving (Show)
+
+        Com esses dois tipos temos um dominio especificado corretamente
+        evitando representações ilegais
+
+    __type aliases__ - podemos criar atalhos para novos tipos
+    >>> type IntPair = (Int, Int)
+
+    __Newtype__ - cria um embrulho (wrapper) sobre um ADT
+    new type é igual a um __product type__
+    >> newtype Peso = MkPeso { xpeso :: Int  }
+    >> getPesoAltura :: Peso -> Altura -> Int
+    >> getPesoAltura (MkPeso x) (MkAltura y) = x * y
+
+    __Polymorphic data types__ - Parametro paramétrico dentro de um
+    novo tipo de dados
+    >> data Foo a = MkFoo a
+    >> data TreasureChest x = TreasureChest { treasureChestLoot :: x }
+    >> howMuchGoldIsInMyChest :: TreasureChest x -> Int -- vai retornar um int
+    >> isEnoughDiamonds :: TreasureChest Int -> Int -- aqui o tipo de entrada foi definido
+
+    __Maybe__ - um tipo polimorfico que representa um valor ou nada
+
+    __Either__ - vai para um caminho ou para outro
+    >> showEither :: Either String Int -> String
+    >> showEither (Left msg) = "Left with string: " ++ msg
+    >> showEither (Right n) = "Right with number: " ++ show n
+
+
 -}
 
 {-
