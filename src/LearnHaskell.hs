@@ -101,7 +101,28 @@ No Haskell nos temos
     __kinds__ - O tipo que representa os tipos. Ele representa o formato de um tipo.
     Kind *      = tipo primitivo (Int, Bool)
     Kind * -> * = construtor de tipos (Maybe Either)
-    Kind * -> Constrait = para constraits em typecasses
+    Kind * -> Constrait = para constraits em typeclasses
+
+    __functor__ - é uma typeclass - permite alterar o valor ou o tipo de algo.
+    possui o método fmap que precisa ser implementado com o kind * -> *
+    >> fmap show (Just 42)
+
+    __Applicative__ - é uma functor com os seguintes métodos
+        __pure__ adiciona um valor ao contexto
+        >> pure True :: Maybe Bool
+        >> pure 1 :: Maybe Int
+
+        __<*>__ - extrai a função, aplica ela ao argumento e coloca o valor no contexto
+        >> Just (+ 4) <*> Just 7
+        >> Just (replicate 3) <*> Just 0
+
+    __Monad__ - aplica o valor a esqueda em uma função a direita
+    >> Just 6 >>= half  (aplica 6 ao half, desde que half retorne uma Maybe)
+    -- half :: Int -> Maybe Int
+    -- half n
+    --     | even n = Just (div n 2)
+    --     | otherwise = Nothing
+
 
 
 -}
@@ -284,6 +305,15 @@ Join a list of strings with line breaks:
 >>> words "Hello   Haskell     World!"  -- split the string into the list of words
 ["Hello","Haskell","World!"]
 -}
+rotate :: Int -> [a] -> [a]
+rotate _ [] = []
+rotate n arr = drop n $ take ((length arr) + n) $ cycle arr
+
+rewind :: [a] -> [a]
+rewind [] = []
+rewind arr = head pegaproximo : rewind (tail pegaproximo)
+  where
+    pegaproximo = rotate (length arr - 1) arr
 
 {-
 Pattern Match examples
@@ -527,3 +557,74 @@ revealCar x = "As propriedades do carro sao: " ++ (getCarro x)
 --    putStrLn "Hello, World!"
 --    putStrLn $ revealCar (2 :: Int)
 --    putStrLn $ revealCar (True :: Bool)
+
+
+
+data DiasDaSemana
+    = Segunda -- 0
+    | Terca
+    | Quarta
+    | Quinta
+    | Sexta -- 4
+    | Sabado
+    | Domingo
+    deriving (Show, Eq, Ord)
+
+isWeekend :: DiasDaSemana -> Bool
+isWeekend a
+    | a == Sabado = True
+    | a == Domingo = True
+    | otherwise = False
+
+nextDay :: DiasDaSemana -> DiasDaSemana
+nextDay Domingo = Segunda
+nextDay a = toEnum ((fromEnum a) + 1)
+
+daysToParty :: DiasDaSemana -> Int
+daysToParty Sexta = 0
+daysToParty Sabado = 2 + daysToParty Segunda
+daysToParty Domingo = 1 + daysToParty Segunda
+-- o /= Sexta é um lambda infix -- cria a lista de a até sexta, separa num array e conta qntos tem
+daysToParty a = length $ takeWhile ( /= Sexta) [a .. Sexta]
+
+instance Enum DiasDaSemana where
+  toEnum :: Int -> DiasDaSemana
+  toEnum 0 = Segunda
+  toEnum 1 = Terca
+  toEnum 2 = Quarta
+  toEnum 3 = Quinta
+  toEnum 4 = Sexta
+  toEnum 5 = Sabado
+  toEnum 6 = Domingo
+
+  fromEnum :: DiasDaSemana -> Int
+  fromEnum Segunda  = 0
+  fromEnum Terca    = 1
+  fromEnum Quarta   = 2
+  fromEnum Quinta   = 3
+  fromEnum Sexta    = 4
+  fromEnum Sabado   = 5
+  fromEnum Domingo  = 6
+
+daysToPartyInstance :: DiasDaSemana -> Int
+daysToPartyInstance day = fromEnum (Sexta :: DiasDaSemana) - fromEnum day
+
+
+
+{-
+functors e aplicatives
+-}
+
+addMaybes :: Maybe Integer -> Maybe Integer -> Maybe Integer
+addMaybes m1 m2 = fmap (+) m1 <*> m2
+
+data Secret e a
+    = Trap e
+    | Reward a
+    deriving (Show, Eq)
+
+instance Functor (Secret e) where
+  fmap :: (a -> b) -> Secret e a -> Secret e b
+  fmap _ (Trap e) = Trap e
+  fmap f (Reward a) = Reward (f a)
+-- fmap (++"teste2") a
