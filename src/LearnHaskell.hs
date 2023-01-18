@@ -103,18 +103,34 @@ No Haskell nos temos
     Kind * -> * = construtor de tipos (Maybe Either)
     Kind * -> Constrait = para constraits em typeclasses
 
-    __functor__ - é uma typeclass - permite alterar o valor ou o tipo de algo.
+    __functor__ - é uma typeclass - permite alterar o valor ou o tipo de algo que está dentro da "cesta".
     possui o método fmap que precisa ser implementado com o kind * -> *
+    Ele também pode ser usado como <$>
     >> fmap show (Just 42)
+    >> (+3) <$> (Just 3)
+
+    - INFIX = <$>
 
     __Applicative__ - é uma functor com os seguintes métodos
         __pure__ adiciona um valor ao contexto
         >> pure True :: Maybe Bool
         >> pure 1 :: Maybe Int
 
-        __<*>__ - extrai a função, aplica ela ao argumento e coloca o valor no contexto
+        __<*>__ - extrai uma função parcial de um contexto,
+        aplica ela ao argumento e coloca o valor final no contexto novamente
+
         >> Just (+ 4) <*> Just 7
         >> Just (replicate 3) <*> Just 0
+
+        -- soma3 :: Int ->  Int ->  Int
+        -- soma3 a b = a + b
+        -- main = print $ Just (soma3 10) <*> Just 1
+
+    - INFIX = <*>
+
+    -- exemplo de applicative + functor
+    -- aplica o * a 2 = (* 2) e aplica o 2*3
+    (*) <$> (Just 2) <*> (Just 3)
 
     __Monad__ - aplica o valor a esqueda em uma função a direita
     >> Just 6 >>= half  (aplica 6 ao half, desde que half retorne uma Maybe)
@@ -123,7 +139,19 @@ No Haskell nos temos
     --     | even n = Just (div n 2)
     --     | otherwise = Nothing
 
+    -- somarM :: Int ->  Int ->  Maybe Int
+    -- somarM a b = Just (a + b)
+    -- aplica o valor wrapped 3 em somarM de 10 e depois channing somarM novamente
+    -- main = print $ Just (3) >>= somarM 10 >>= somarM 10
 
+    -- com functor - applicative - monad podemos aplicar funções em uma sequencia de dados ou listas
+
+    Applicatives can be found in many applications:
+
+    ✦ Chaining operations over optional values
+    ✦ Parsers
+    ✦ Input form validation
+    ✦ Concurrent and parallel execution of tasks
 
 -}
 
@@ -612,19 +640,128 @@ daysToPartyInstance day = fromEnum (Sexta :: DiasDaSemana) - fromEnum day
 
 
 {-
-functors e aplicatives
+functors aplicatives monads
 -}
-
-addMaybes :: Maybe Integer -> Maybe Integer -> Maybe Integer
-addMaybes m1 m2 = fmap (+) m1 <*> m2
-
 data Secret e a
     = Trap e
     | Reward a
     deriving (Show, Eq)
 
 instance Functor (Secret e) where
-  fmap :: (a -> b) -> Secret e a -> Secret e b
-  fmap _ (Trap e) = Trap e
-  fmap f (Reward a) = Reward (f a)
--- fmap (++"teste2") a
+    fmap :: (a -> b) -> Secret e a -> Secret e b
+    fmap _ (Trap e) = Trap e
+    fmap f (Reward a) = Reward (f a)
+
+-- example
+addOneGold :: (Integral a, Num a) => (Secret e a) -> (Secret e a)
+addOneGold (Trap e) = Trap e
+addOneGold (Reward a) = Reward (a + 1)
+
+addToChest :: (Integral a, Num a, Num e) => a -> (Secret e a)
+addToChest a
+    | a == 0    = (Trap 0)
+    | otherwise = Reward a
+
+-- addOneGold (Reward 1)
+-- addOneGold $ Reward 1
+-- fmap (addToChest) (Reward 1)
+
+
+instance Applicative (Secret e) where
+    pure :: a -> Secret e a
+    pure = Reward
+    (<*>) :: Secret e (a -> b) -> Secret e a -> Secret e b
+    (Trap a) <*> _ = Trap a
+    _ <*> (Trap a) = Trap a
+    (Reward f) <*> i = fmap f i
+
+-- tests
+secret1 = Trap "you die"
+secret2 = Reward 10
+secret3 = Reward 20
+
+-- fmap (+10) secret1
+
+-- 50
+-- fmap (+40) secret2
+
+-- 20
+-- Reward (+10) <*> Reward 10
+
+instance Monad (Secret e) where
+    (>>=) :: Secret e a -> (a -> Secret e b) -> Secret e b
+    (Trap c) >>= f = Trap c
+    (Reward c) >>= f = f c
+
+test :: Int -> Secret Int Int
+test n
+    | n == 1 = Trap 1
+    | otherwise = Reward (n + 1)
+
+-- test
+-- Trap 11 >>= test
+-- Reward 11 >>= test
+-- Reward 11 >>= test >>= test
+
+
+
+
+data List a
+    = Empty
+    | Cons a (List a)
+    deriving (Show)
+
+instance Functor List where
+    fmap :: (a -> b) -> List a -> List b
+    fmap _ Empty = Empty
+    fmap f (Cons a (blist)) = Cons (f a) (fmap f blist)
+
+
+list1 = Empty
+list2 = Cons 10 (Cons 20 Empty)
+list3 = Cons 10 (Cons 20 (Cons 30 Empty))
+
+-- fmap (+10) list3
+-- Cons 20 (Cons 30 (Cons 40 Empty))
+
+
+list4 = Cons (+5) Empty
+list5 = Cons (+5) (Cons (+6) Empty)
+list6 = Cons (+1) (Cons (+2) (Cons (+3) Empty))
+list7 = Cons 1 (Cons 2 (Cons 3 Empty))
+
+combineList :: List a -> List a -> List a
+combineList Empty l1 = l1
+combineList l1 Empty = l1
+combineList (Cons x xs) l2 = Cons x (combineList xs l2)
+
+instance Applicative List where
+    pure :: a -> List a
+    pure a = Cons a Empty
+    (<*>) :: List (a -> b) -> List a -> List b
+    Empty <*> _ = Empty
+    _ <*> Empty = Empty
+    -- (Cons f l) <*> i = fmap f i
+    -- (Cons f (Cons l emp)) <*> i = fmap l i
+    (Cons f emp) <*> i = combineList (fmap f i) (emp <*> i)
+
+-- list6 <*> list7
+
+
+flattenList :: List (List a) -> List a
+flattenList Empty = Empty
+flattenList (Cons x xs) = combineList x (flattenList xs)
+
+instance Monad List where
+    (>>=) :: List a -> (a -> List b) -> List b
+    list1 >>= func = flattenList (fmap func list1)
+
+addOneOnList :: (Integral a, Num a) => a -> List a
+addOneOnList n = Cons (n + 1) Empty
+
+listC = Cons list2 Empty
+
+-- exemplo de uso
+-- list2 >>= addOneOnList
+-- list3 >>= addOneOnList
+-- list3 >>= addOneOnList >>= addOneOnList
