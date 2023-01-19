@@ -144,6 +144,12 @@ No Haskell nos temos
     -- aplica o valor wrapped 3 em somarM de 10 e depois channing somarM novamente
     -- main = print $ Just (3) >>= somarM 10 >>= somarM 10
 
+    -- half2 :: (Monad m) => m Int -> m Int
+    -- half2 monadInt = monadInt >>= \x -> if even x then pure (div x 2) else pure 0
+    -- half2 (Just 6) = Just 3
+    -- half2 [2, 4, 5] = half2 [2, 4, 5]
+
+
     -- com functor - applicative - monad podemos aplicar funções em uma sequencia de dados ou listas
 
     Applicatives can be found in many applications:
