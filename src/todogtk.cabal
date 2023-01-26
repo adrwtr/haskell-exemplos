@@ -1,0 +1,12 @@
+cabal-version: 2.2
+name: nome-projeto
+version: 0.1.0.0
+author: Adriano Waltrick
+
+executable todo-gtk
+    build-depends: gi-gtk
+
+    hs-source-dirs: src
+    main-is: TodoGtk.hs
+    default-language: Haskell2010
+    ghc-options: -Wall -threaded

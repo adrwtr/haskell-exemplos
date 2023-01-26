@@ -20,4 +20,6 @@ ghci
 C:\tools\ghc-9.0.1\bin\ghci
 
 
-#
+# no docker
+
+docker run --rm --interactive --tty --volume $PWD:/src  haskell
