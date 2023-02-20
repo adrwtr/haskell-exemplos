@@ -26,6 +26,8 @@ main = do
 
     label <- labelNew (Just "Digite seu nome:")
     -- col 0 ate 2 row 0 ate 1
+    -- a leitura é igual a, imprime de-até
+    -- ou use a área de-até tal valor
     tableAttachDefaults table label 0 2 0 1
 
     entry1 <- entryNew

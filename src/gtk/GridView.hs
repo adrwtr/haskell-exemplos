@@ -25,12 +25,10 @@ main = do
     set window [windowTitle := "Table", containerBorderWidth := 20,
         windowDefaultWidth := 450, windowDefaultHeight := 400]
 
-    -- row=3 cols=2
     table   <- tableNew 6 2 True
     containerAdd window table
 
     label <- labelNew (Just "Lista de pessoas:")
-    -- col 0 ate 2 row 0 ate 1
     tableAttachDefaults table label 0 2 0 1
 
     button3 <- buttonNewWithLabel "Quit"
@@ -66,26 +64,22 @@ main = do
             $ \(Pessoa _ a) -> [cellText := show a]
     treeViewAppendColumn treeView ageColumn
 
-    tableAttachDefaults table treeView 0 2 1 3
+    treeSelection <- treeViewGetSelection treeView
+    treeSelectionSetMode treeSelection  SelectionSingle
+    onSelectionChanged treeSelection (oneSelection model treeSelection)
 
+    -- adiciona a tree na janela
+    tableAttachDefaults table treeView 0 2 1 3
 
     onDestroy window mainQuit
 
     widgetShowAll window
     mainGUI
 
-buttonSwitch :: Button -> IO ()
-buttonSwitch b = do
-    txt <- buttonGetLabel b
-    let newtxt = case txt of
-            "Off" -> "On"
-            "On"  -> "Off"
-    buttonSetLabel b newtxt
 
-buttonTest :: Entry -> Button -> IO ()
-buttonTest fld b1 = do
-    txt <- entryGetText fld
-    -- let mesg = "\"" ++ txt ++ "\""
-    let mesg = txt ++ ""
-    buttonSetLabel b1 mesg
-    return ()
+oneSelection :: ListStore Pessoa -> TreeSelection ->  IO ()
+oneSelection list tree = do
+    sel <- treeSelectionGetSelectedRows tree
+    let s = head (head sel)
+    (Pessoa nome1 _) <- listStoreGetValue list s
+    putStrLn $ "selected " ++ nome1
