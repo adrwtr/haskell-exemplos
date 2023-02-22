@@ -84,7 +84,7 @@ salvarPessoas pessoas caminho = DTB.writeFile caminho (encode pessoas)
 
 -- Adiciona uma nova pessoa ao array de pessoas
 adicionarPessoa :: Pessoa -> [Pessoa] -> [Pessoa]
-adicionarPessoa pessoa pessoas = pessoa : pessoas
+adicionarPessoa pessoa pessoas = pessoas ++ [pessoa]
 
 pegarPessoas :: FilePath -> IO [Pessoa]
 pegarPessoas fpath = do
@@ -100,6 +100,8 @@ cleanPessoaPrint [] = return ()
 cleanPessoaPrint (x:xs) = do
     putStrLn $  "Nome: " ++ (nome x) ++ "\nIdade: " ++ show (idade x) ++ "\n"
     cleanPessoaPrint xs
+
+
 
 ------------------
 -- fluxo programa
@@ -130,7 +132,7 @@ procurar filePath = do
     putStrLn labelProcurar
     id <- lerTecladoInt "Informe o código:"
     arrPessoas <- pegarPessoas filePath
-    cleanPessoaPrint $ arrPessoas !! id
+    cleanPessoaPrint $ [arrPessoas !! id]
     return ()
 
 -- main

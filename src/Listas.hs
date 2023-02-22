@@ -86,6 +86,8 @@ main :: IO ()
 main = do
     let lista1 = [3, 2, 5, 10, 11, 1]
     print lista1
+    -- segundo elemento da lista
+    print $ lista1 !! 2
     print $ iSort lista1
     print $ reverse lista1
     print $ reverse1 lista1
