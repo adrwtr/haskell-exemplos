@@ -20,3 +20,20 @@ main :: IO ()
 main =  do
     print $ temperaturaNaEstacao Verao
     print $ temperaturaNaEstacao Inverno
+
+
+
+valor = 10
+valor = 20
+
+main :: IO ()
+main =  do
+    print valor
+
+somaLista :: [Int] -> Int
+somaLista [] = 0
+somaLista (x:xs) = x + somaLista xs
+
+main :: IO ()
+main =  do
+    print $ somaLista [1, 2, 3]
