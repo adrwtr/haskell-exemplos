@@ -44,6 +44,8 @@ menuPrincipal = "Escolha uma das opções baixo:\n"
     ++ "4. Painel\n"
     ++ "5. Sair\n\n"
 
+
+
 -- cadastro
 labelCadastroPessoa :: String
 labelCadastroPessoa = "Iniciando cadastro:\n"
@@ -56,6 +58,10 @@ labelImprimeTodos = "********************\nListando todos os cadastros:\n"
 -- procurar
 labelProcurar :: String
 labelProcurar = "********************\nProcurar cadastro:\n"
+
+-- painel
+labelPainel :: String
+labelPainel = "*******************\nPainel - média de idade:\n"
 
 
 -- helpers
@@ -84,7 +90,7 @@ salvarPessoas pessoas caminho = DTB.writeFile caminho (encode pessoas)
 
 -- Adiciona uma nova pessoa ao array de pessoas
 adicionarPessoa :: Pessoa -> [Pessoa] -> [Pessoa]
-adicionarPessoa pessoa pessoas = pessoa : pessoas
+adicionarPessoa pessoa pessoas = pessoas ++ [pessoa]
 
 pegarPessoas :: FilePath -> IO [Pessoa]
 pegarPessoas fpath = do
@@ -100,6 +106,18 @@ cleanPessoaPrint [] = return ()
 cleanPessoaPrint (x:xs) = do
     putStrLn $  "Nome: " ++ (nome x) ++ "\nIdade: " ++ show (idade x) ++ "\n"
     cleanPessoaPrint xs
+
+
+-- pega as idades
+getIdades :: [Pessoa] -> [Int]
+getIdades [] = []
+getIdades (x:xs) = (idade x) : getIdades xs
+
+
+-- busca a media
+getAverage :: [Int] -> Float
+getAverage [] = 0
+getAverage b = fromIntegral $ (Prelude.foldl (+) 0 b) `div` (Prelude.length b)
 
 ------------------
 -- fluxo programa
@@ -130,8 +148,17 @@ procurar filePath = do
     putStrLn labelProcurar
     id <- lerTecladoInt "Informe o código:"
     arrPessoas <- pegarPessoas filePath
-    cleanPessoaPrint $ arrPessoas !! id
+    cleanPessoaPrint $ [arrPessoas !! id]
     return ()
+
+-- exibe um painel com a média de idades
+exibirPainel :: String -> IO ()
+exibirPainel filePath = do
+    putStrLn labelPainel
+    arrPessoas <- pegarPessoas filePath
+    let average = getAverage $ getIdades arrPessoas
+    putStrLn $ show average
+    return()
 
 -- main
 
@@ -149,16 +176,8 @@ main = do
         3 -> do {
             exibirTodos (arquivoPath) >> main
         }
-        4 -> putStrLn "Painel:"
+        4 -> do {
+            exibirPainel (arquivoPath) >> main
+        }
         5 -> putStrLn "Saindo..."
         otherwise -> main
-
-
-
---     nome <- input "nome do aluno: "
---     nota1 <- inputFloat "Nota 1: "
---     nota2 <- inputFloat "Nota 2: "
---     print $ (nome, nota1, nota2)
-
---     -- a dupla pode ter uma lista se for do mesmo valor
---     print $ (nome, [nota1, nota2])

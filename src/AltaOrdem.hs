@@ -15,6 +15,16 @@ incrementa = (+1)
 aplicaQuatroX :: (a -> a) -> a -> a
 aplicaQuatroX f a = (f . f . f . f) a
 
+pega3 :: [a] -> [a]
+pega3 a = take 3 a
+
+apaga3 :: [a] -> [a]
+apaga3 a = drop 3 a
+
+hiorder :: (Int -> [a] -> [a]) -> [a] -> [a]
+hiorder _ [] = []
+hiorder f a = f 3 $ a
+
 main :: IO ()
 main = do
     print $ (+) 2 3
@@ -49,3 +59,6 @@ main = do
 
     -- composicao de funcao
     print $ aplicaQuatroX (\x -> x+1) 1
+
+    print $ hiorder drop "hello world"
+    print $ hiorder take "hello world"

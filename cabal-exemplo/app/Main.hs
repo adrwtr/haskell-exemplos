@@ -44,6 +44,8 @@ menuPrincipal = "Escolha uma das opções baixo:\n"
     ++ "4. Painel\n"
     ++ "5. Sair\n\n"
 
+
+
 -- cadastro
 labelCadastroPessoa :: String
 labelCadastroPessoa = "Iniciando cadastro:\n"
@@ -56,6 +58,10 @@ labelImprimeTodos = "********************\nListando todos os cadastros:\n"
 -- procurar
 labelProcurar :: String
 labelProcurar = "********************\nProcurar cadastro:\n"
+
+-- painel
+labelPainel :: String
+labelPainel = "*******************\nPainel - média de idade:\n"
 
 
 -- helpers
@@ -102,6 +108,16 @@ cleanPessoaPrint (x:xs) = do
     cleanPessoaPrint xs
 
 
+-- pega as idades
+getIdades :: [Pessoa] -> [Int]
+getIdades [] = []
+getIdades (x:xs) = (idade x) : getIdades xs
+
+
+-- busca a media
+getAverage :: [Int] -> Float
+getAverage [] = 0
+getAverage b = fromIntegral $ (Prelude.foldl (+) 0 b) `div` (Prelude.length b)
 
 ------------------
 -- fluxo programa
@@ -135,6 +151,15 @@ procurar filePath = do
     cleanPessoaPrint $ [arrPessoas !! id]
     return ()
 
+-- exibe um painel com a média de idades
+exibirPainel :: String -> IO ()
+exibirPainel filePath = do
+    putStrLn labelPainel
+    arrPessoas <- pegarPessoas filePath
+    let average = getAverage $ getIdades arrPessoas
+    putStrLn $ show average
+    return()
+
 -- main
 
 main = do
@@ -151,7 +176,9 @@ main = do
         3 -> do {
             exibirTodos (arquivoPath) >> main
         }
-        4 -> putStrLn "Painel:"
+        4 -> do {
+            exibirPainel (arquivoPath) >> main
+        }
         5 -> putStrLn "Saindo..."
         otherwise -> main
 

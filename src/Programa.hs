@@ -66,6 +66,7 @@ main_teste2 = do
     notas <- lerNotas
     print notas
 
+exibirMedias :: [Nota] -> IO ()
 exibirMedias notas = do
 -- main = do
     nome <- input "Digite o nome do aluno: "
@@ -81,9 +82,9 @@ exibirMedias notas = do
             exibirMedias notas
 
 -- main_final = do
-main = do
-    let notas <- lerNotas
-    exibirMedias notas
+-- main = do
+--     let notas <- lerNotas
+--     exibirMedias notas
 
 -- main_final_reduzido
 main = lerNotas >>= exibirMedias
